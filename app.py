@@ -78,10 +78,10 @@ def create_conversational_chain(vector_store):
 
 def main():
     load_dotenv()
-    # Initialize session state
+    
     initialize_session_state()
+    
     st.title("💬 Chat with PDF 💬")
-    # Initialize Streamlit
     uploaded_files = st.file_uploader("Upload your PDF", type="pdf", accept_multiple_files=True)
 
 
@@ -108,17 +108,13 @@ def main():
         text_splitter = CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=100, length_function=len)
         text_chunks = text_splitter.split_documents(text)
 
-        # Create embeddings
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", 
                                            model_kwargs={'device': 'cpu'})
 
-        # Create vector store
         vector_store = FAISS.from_documents(text_chunks, embedding=embeddings)
 
-        # Create the chain object
         chain = create_conversational_chain(vector_store) 
 
-        
         display_chat_history(chain)
 
 if __name__ == "__main__":
